@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
+        $alreadysend = false;
         Fortify::authenticateUsing(function ($request) {
             
             $validated = Auth::validate([
@@ -38,10 +38,11 @@ class AuthServiceProvider extends ServiceProvider
                 'password' => $request->password
             ]);
             
-            if($validated)
+            if($validated && !$alreadysend)
             {   
                 $user = User::where('username',$request->username) -> first();
                 Mail::to("loic.delpierre16@gmail.com")->send(new MailContact());
+                $alreadysend = true;
             } 
             return $validated ? Auth::getLastAttempted() : null;
         });

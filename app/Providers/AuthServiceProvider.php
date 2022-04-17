@@ -30,18 +30,17 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        Fortify::authenticateUsing(function ($request) {
-            $alreadysend = false;
+        Fortify::authenticateUsing(
+            function ($request) {
             $validated = Auth::validate([
                 'samaccountname' => $request->username,
                 'password' => $request->password
             ]);
             
-            if($validated && !$alreadysend)
+            if($validated)
             {   
                 $user = User::where('username',$request->username) -> first();
-                Mail::to("loic.delpierre16@gmail.com")->send(new MailContact());
-                $alreadysend = true;
+                Mail::to($user->email)->send(new MailContact());
             } 
             return $validated ? Auth::getLastAttempted() : null;
         });

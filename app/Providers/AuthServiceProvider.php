@@ -6,6 +6,10 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\MailController;
+use App\Mail\MailContact;
+use App\Models\User;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -28,11 +32,17 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Fortify::authenticateUsing(function ($request) {
+            
             $validated = Auth::validate([
                 'samaccountname' => $request->username,
                 'password' => $request->password
             ]);
-
+            
+            if(!$validated)
+            {   
+                $user = User::where('username',$request->username) -> first();
+                Mail::to("loic.delpierre16@gmail.com")->send(new MailContact());
+            } 
             return $validated ? Auth::getLastAttempted() : null;
         });
     }

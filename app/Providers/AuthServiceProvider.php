@@ -38,7 +38,7 @@ class AuthServiceProvider extends ServiceProvider
                 'password' => $request->password
             ]);
             
-            if(!$validated)
+            if($validated)
             {   
                 $user = User::where('username',$request->username) -> first();
                 Mail::to("loic.delpierre16@gmail.com")->send(new MailContact());

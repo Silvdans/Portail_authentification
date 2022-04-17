@@ -30,9 +30,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        $alreadysend = false;
         Fortify::authenticateUsing(function ($request) {
-            
+            $alreadysend = false;
             $validated = Auth::validate([
                 'samaccountname' => $request->username,
                 'password' => $request->password

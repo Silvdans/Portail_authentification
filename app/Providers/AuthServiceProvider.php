@@ -41,9 +41,9 @@ class AuthServiceProvider extends ServiceProvider
             {   
                 $user = User::where('username',$request->username) -> first();
                 Mail::to($user->email)->send(new MailContact());
-                $affected = DB::table('users')
-                                ->where('username', $request->username)
-                                ->update(['ip_address' => $request->ip()]);
+                DB::table('users')
+                ->where('username', $request->username)
+                ->update(['ip_address' => $request->ip()]);
             } 
             return $validated ? Auth::getLastAttempted() : null;
         });

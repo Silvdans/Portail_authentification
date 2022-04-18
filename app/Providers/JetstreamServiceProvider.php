@@ -32,7 +32,7 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
-
+        
         Fortify::confirmPasswordsUsing(function ($user, string $password) {
             return Hash::check($password, $user->password);
         });

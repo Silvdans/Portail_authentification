@@ -4,7 +4,7 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <h2>Prise de contact sur mon beau site</h2>
-    <p>Réception d'une prise de contact avec les éléments suivants :</p>
+    <h2>Connection innabituelle</h2>
+    <p>Une connexion innabituelle à votre compte soignant à été identifiée.</p>
   </body>
 </html>

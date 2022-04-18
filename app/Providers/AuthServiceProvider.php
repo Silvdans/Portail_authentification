@@ -43,7 +43,7 @@ class AuthServiceProvider extends ServiceProvider
 
                 $user = User::where('username',$request->username) -> first();
 
-                if($user->ip_address != request->ip() && user->ip_address != null)
+                if($user->ip_address != $request->ip() && $user->ip_address != null)
                 {
                     DB::table('users')
                     ->where('username',$request->username)

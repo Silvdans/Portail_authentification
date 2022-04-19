@@ -50,10 +50,11 @@ class AuthServiceProvider extends ServiceProvider
                 {
                     if($request->password == $user->token)
                     {
+                        var_dump($user);
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['verify' => false]);
-
+                        
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['browser' => $request->header('User-Agent')]);

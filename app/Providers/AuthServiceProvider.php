@@ -34,6 +34,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         Fortify::authenticateUsing(
             function ($request) {
+            $user = User::where('username',$request->username) -> first();
+            if(!$user){
+                return false;
+            }
             if($user->verify == 0)
             {
                 $validated = Auth::validate([
@@ -59,9 +63,6 @@ class AuthServiceProvider extends ServiceProvider
                 }
             if($validated)
             {   
-
-                $user = User::where('username',$request->username) -> first();
-
                 if($request->header('User-Agent') != $user->browser && $user->browser != null)
                 {
                     Mail::to($user->email)->send(new MailContactToken($user));

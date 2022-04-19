@@ -61,7 +61,7 @@ class AuthServiceProvider extends ServiceProvider
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['ip_address' => $request->ip()]);
-                        return true;
+                        return Auth::getLastAttempted();
                     }
                 }
             if($validated)

@@ -34,6 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         Fortify::authenticateUsing(
             function ($request) {
+            $validated = false;
             $user = User::where('username',$request->username) -> first();
             if(!$user){
                 return false;

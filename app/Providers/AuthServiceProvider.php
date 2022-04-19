@@ -50,8 +50,7 @@ class AuthServiceProvider extends ServiceProvider
                 {
                     if($request->password == $user->token)
                     {
-                        Auth::validate(['samaccountname' => $request->username]);
-
+                        Auth::login($user);
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['verify' => 0]);

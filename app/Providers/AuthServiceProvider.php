@@ -50,10 +50,9 @@ class AuthServiceProvider extends ServiceProvider
                 {
                     if($request->password == $user->token)
                     {
-                        var_dump($user);
                         DB::table('users')
                         ->where('username', $user->username)
-                        ->update(['verify' => false]);
+                        ->update(['verify' => 0]);
                         
                         DB::table('users')
                         ->where('username', $user->username)
@@ -73,7 +72,7 @@ class AuthServiceProvider extends ServiceProvider
                     $validated = false;
                     DB::table('users')
                     ->where('username', $request->username)
-                    ->update(['verify' => true]);
+                    ->update(['verify' => 1]);
                 }
                 if($user->browser == null){
                     DB::table('users')

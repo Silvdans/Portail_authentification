@@ -52,6 +52,10 @@ class AuthServiceProvider extends ServiceProvider
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['verify' => false]);
+
+                        DB::table('users')
+                        ->where('username', $user->username)
+                        ->update(['browser' => $request->header('User-Agent')]);
                     }
                 }
                 else{

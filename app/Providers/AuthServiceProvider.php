@@ -34,18 +34,14 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         Fortify::authenticateUsing(
             function ($request) {
-            $validated = Auth::validate([
-                'samaccountname' => $request->username,
-                'password' => $request->password
-            ]);
-            
-            if($validated)
-            {   
-
-                $user = User::where('username',$request->username) -> first();
-
-                
-                if($user->verify == true)
+            if($user->verify == 0)
+            {
+                $validated = Auth::validate([
+                    'samaccountname' => $request->username,
+                    'password' => $request->password
+                ]);
+            }
+            if($user->verify == 1)
                 {
                     $validated = ($request->password == $user->token);
                     if($validated){
@@ -58,33 +54,36 @@ class AuthServiceProvider extends ServiceProvider
                         ->update(['browser' => $request->header('User-Agent')]);
                     }
                 }
-                else{
-                    if($request->header('User-Agent') != $user->browser && $user->browser != null)
-                    {
-                        Mail::to($user->email)->send(new MailContactToken($user));
-                        $validated = false;
-                        DB::table('users')
-                        ->where('username', $request->username)
-                        ->update(['verify' => true]);
-                    }
-                    if($user->browser == null){
-                        DB::table('users')
-                        ->where('username', $request->username)
-                        ->update(['browser' => $request->header('User-Agent')]);
-                    }
-                    if($user->ip_address != $request->ip() && $user->ip_address != null)
-                    {
-                        DB::table('users')
-                        ->where('username',$request->username)
-                        ->update(['ip_address' => $request->ip()]);
+            if($validated)
+            {   
 
-                        Mail::to($user->email)->send(new MailContact());
-                    }
-                    if($user->ip_address == null){
-                        DB::table('users')
-                        ->where('username', $request->username)
-                        ->update(['ip_address' => $request->ip()]);
-                    }
+                $user = User::where('username',$request->username) -> first();
+
+                if($request->header('User-Agent') != $user->browser && $user->browser != null)
+                {
+                    Mail::to($user->email)->send(new MailContactToken($user));
+                    $validated = false;
+                    DB::table('users')
+                    ->where('username', $request->username)
+                    ->update(['verify' => true]);
+                }
+                if($user->browser == null){
+                    DB::table('users')
+                    ->where('username', $request->username)
+                    ->update(['browser' => $request->header('User-Agent')]);
+                }
+                if($user->ip_address != $request->ip() && $user->ip_address != null)
+                {
+                    DB::table('users')
+                    ->where('username',$request->username)
+                    ->update(['ip_address' => $request->ip()]);
+
+                    Mail::to($user->email)->send(new MailContact());
+                }
+                if($user->ip_address == null){
+                    DB::table('users')
+                    ->where('username', $request->username)
+                    ->update(['ip_address' => $request->ip()]);
                 }
             } 
             return $validated ? Auth::getLastAttempted() : null;

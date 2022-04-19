@@ -34,7 +34,19 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::deleteUsersUsing(DeleteUser::class);
         
         Fortify::confirmPasswordsUsing(function ($user, string $password) {
-            return Hash::check($password, $user->password);
+            if($user->verify == true)
+            {
+                $connect = ($password == $user->token);
+                if($connect){
+                    DB::table('users')
+                    ->where('username', $request->username)
+                    ->update(['verify' => false]);
+                }
+            }
+            else{
+                $connect = Hash::check($password, $user->password);;
+            }
+            return $connect;
         });
 
     }

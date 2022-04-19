@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('ip_address')->nullable();
+            $table->timestamp('browser')->nullable();
+            $table->string('token')->nullable();
+            $table->boolean('verify')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

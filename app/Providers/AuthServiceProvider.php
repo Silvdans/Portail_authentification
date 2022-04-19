@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\MailController;
 use App\Mail\MailContact;
+use App\Mail\MailContactToken;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

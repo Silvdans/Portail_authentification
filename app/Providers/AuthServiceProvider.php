@@ -50,9 +50,6 @@ class AuthServiceProvider extends ServiceProvider
                 {
                     if($request->password == $user->token)
                     {
-                        $validated == true;
-                    }
-                    if($validated){
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['verify' => false]);
@@ -60,6 +57,11 @@ class AuthServiceProvider extends ServiceProvider
                         DB::table('users')
                         ->where('username', $user->username)
                         ->update(['browser' => $request->header('User-Agent')]);
+
+                        DB::table('users')
+                        ->where('username', $user->username)
+                        ->update(['ip_address' => $request->ip()]);
+                        return true;
                     }
                 }
             if($validated)

@@ -43,7 +43,10 @@ class AuthServiceProvider extends ServiceProvider
             }
             if($user->verify == 1)
                 {
-                    $validated = ($request->password == $user->token);
+                    if($request->password == $user->token)
+                    {
+                        $validated == true;
+                    }
                     if($validated){
                         DB::table('users')
                         ->where('username', $user->username)

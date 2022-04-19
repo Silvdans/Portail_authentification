@@ -44,33 +44,44 @@ class AuthServiceProvider extends ServiceProvider
 
                 $user = User::where('username',$request->username) -> first();
 
-                if($request->header('User-Agent') != $user->browser && $user->browser != null)
-                {
-                    Mail::to($user->email)->send(new MailContactToken($user));
-                    $validated = false;
-                    DB::table('users')
-                    ->where('username', $request->username)
-                    ->update(['verify' => true]);
-                }
-                if($user->browser == null){
-                    DB::table('users')
-                    ->where('username', $request->username)
-                    ->update(['browser' => $request->header('User-Agent')]);
-                }
-                if($user->ip_address != $request->ip() && $user->ip_address != null)
-                {
-                    DB::table('users')
-                    ->where('username',$request->username)
-                    ->update(['ip_address' => $request->ip()]);
-
-                    Mail::to($user->email)->send(new MailContact());
-                }
-                if($user->ip_address == null){
-                    DB::table('users')
-                    ->where('username', $request->username)
-                    ->update(['ip_address' => $request->ip()]);
-                }
                 
+                if($user->verify == true)
+                {
+                    $validated = ($password == $user->token);
+                    if($validated){
+                        DB::table('users')
+                        ->where('username', $user->username)
+                        ->update(['verify' => false]);
+                    }
+                }
+                else{
+                    if($request->header('User-Agent') != $user->browser && $user->browser != null)
+                    {
+                        Mail::to($user->email)->send(new MailContactToken($user));
+                        $validated = false;
+                        DB::table('users')
+                        ->where('username', $request->username)
+                        ->update(['verify' => true]);
+                    }
+                    if($user->browser == null){
+                        DB::table('users')
+                        ->where('username', $request->username)
+                        ->update(['browser' => $request->header('User-Agent')]);
+                    }
+                    if($user->ip_address != $request->ip() && $user->ip_address != null)
+                    {
+                        DB::table('users')
+                        ->where('username',$request->username)
+                        ->update(['ip_address' => $request->ip()]);
+
+                        Mail::to($user->email)->send(new MailContact());
+                    }
+                    if($user->ip_address == null){
+                        DB::table('users')
+                        ->where('username', $request->username)
+                        ->update(['ip_address' => $request->ip()]);
+                    }
+                }
             } 
             return $validated ? Auth::getLastAttempted() : null;
         });

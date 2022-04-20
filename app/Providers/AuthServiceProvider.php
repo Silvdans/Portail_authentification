@@ -12,7 +12,7 @@ use App\Mail\MailContact;
 use App\Mail\MailContactToken;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Stevebauman\Location\Facades\Location;
+use Stevebauman\Location\Facades\Location;  
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -100,7 +100,7 @@ class AuthServiceProvider extends ServiceProvider
 
                         Mail::to($user->email)->send(new MailContact());
                     }
-                    $position = Location::get();
+                    $position = Location::get($request->ip());
                     if($position->countryName != "France")
                     {
                         $validated = false;

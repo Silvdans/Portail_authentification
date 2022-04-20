@@ -178,7 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
-        Stevebauman\Location\LocationServiceProvider::class,
+        Stevebauman\Location\LocationServiceProvider::class
 
     ],
 

@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {   
+    {
         $this->registerPolicies();
         Fortify::authenticateUsing(
             function ($request) {
@@ -59,9 +59,24 @@ class AuthServiceProvider extends ServiceProvider
                     ]);
                 }
                 if($user->verify == 1)
-                {
-                           
-                }
+                    {
+                        if($request->password == $user->token)
+                        {
+                            Auth::login($user);
+                            DB::table('users')
+                            ->where('username', $user->username)
+                            ->update(['verify' => 0]);
+                            
+                            DB::table('users')
+                            ->where('username', $user->username)
+                            ->update(['browser' => $request->header('User-Agent')]);
+
+                            DB::table('users')
+                            ->where('username', $user->username)
+                            ->update(['ip_address' => $request->ip()]);
+                            return Auth::getLastAttempted();
+                        }
+                    }
                 if($validated)
                 {   
                     if($request->header('User-Agent') != $user->browser && $user->browser != null)
@@ -71,13 +86,11 @@ class AuthServiceProvider extends ServiceProvider
                         DB::table('users')
                         ->where('username', $request->username)
                         ->update(['verify' => 1]);
-                        return redirect()->route('login_token',$user->id);
                     }
                     if($user->browser == null){
                         DB::table('users')
                         ->where('username', $request->username)
                         ->update(['browser' => $request->header('User-Agent')]);
-                        
                     }
                     if($user->ip_address != $request->ip() && $user->ip_address != null)
                     {

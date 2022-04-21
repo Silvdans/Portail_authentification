@@ -88,7 +88,6 @@ class AuthServiceProvider extends ServiceProvider
                         Mail::to($user->email)->send(new MailContact());
                     }
                     $position = Location::get();
-                    dd($position);
                     if($position->countryName != "France")
                     {
                         $validated = false;
